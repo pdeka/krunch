@@ -1,0 +1,32 @@
+#!/bin/bash
+
+FOLDER=$HOME"/Pictures/Kenekt/Photos"
+BACKUP_BASE=$HOME"/Pictures/Kenekt/Backup"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+echo "--------------------------------------------------------------------------"
+echo "FOLDER: "$FOLDER
+echo "BACKUP_BASE: "$BACKUP_BASE
+echo "DIR: "$DIR
+echo "HOME: "$HOME
+echo "--------------------------------------------------------------------------"
+
+mkdir -p -v $FOLDER
+mkdir -p -v $BACKUP_BASE
+
+echo "Setting up launchd"  >> /tmp/krunch.stdout 2>&1
+
+rm -f $HOME/Library/LaunchAgents/com.kenekt.krunch.plist
+echo "Removed plist file"  >> /tmp/krunch.stdout 2>&1
+
+cp $DIR/com.kenekt.krunch.plist $HOME/Library/LaunchAgents/com.kenekt.krunch.plist >> /tmp/krunch.stdout 2>&1
+
+echo "Copied plist file"  >> /tmp/krunch.stdout 2>&1
+
+launchctl unload -w -F $HOME/Library/LaunchAgents/com.kenekt.krunch.plist >> /tmp/krunch.stdout 2>&1
+
+echo "Unloaded previous plist"  >> /tmp/krunch.stdout 2>&1
+
+launchctl load -w -F $HOME/Library/LaunchAgents/com.kenekt.krunch.plist >> /tmp/krunch.stdout 2>&1
+
+echo "Loaded new plist"  >> /tmp/krunch.stdout 2>&1
